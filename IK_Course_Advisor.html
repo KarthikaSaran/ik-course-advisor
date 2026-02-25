@@ -3,435 +3,357 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>IK Agentic AI Course Advisor</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<title>Interview Kickstart — Find Your Right Agentic AI Course</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0A0E17;
+    --bg: #06090F;
+    --surface: #0d1117;
     --card: #111827;
-    --card-hover: #1a2234;
+    --card-hover: #171f2e;
     --border: #1e293b;
-    --border-active: #3b82f6;
-    --accent: #3b82f6;
-    --accent-glow: rgba(59,130,246,0.15);
-    --pwc: #f59e0b;
-    --pwc-bg: rgba(245,158,11,0.08);
-    --pwc-border: rgba(245,158,11,0.3);
-    --kyp: #10b981;
-    --kyp-bg: rgba(16,185,129,0.08);
-    --kyp-border: rgba(16,185,129,0.3);
-    --neither: #ef4444;
+    --border-hi: #334155;
+    --accent: #6366f1;
+    --accent-soft: rgba(99,102,241,0.12);
+    --gold: #f59e0b;
+    --gold-soft: rgba(245,158,11,0.06);
+    --gold-border: rgba(245,158,11,0.25);
+    --gold-bg: #1a1508;
+    --green: #10b981;
+    --green-soft: rgba(16,185,129,0.06);
+    --green-border: rgba(16,185,129,0.25);
+    --green-bg: #081a13;
+    --red: #ef4444;
     --text: #e2e8f0;
-    --text-muted: #94a3b8;
-    --text-dim: #64748b;
-    --white: #ffffff;
+    --text2: #cbd5e1;
+    --muted: #94a3b8;
+    --dim: #64748b;
+    --faint: #475569;
+    --white: #f8fafc;
   }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    line-height: 1.5;
-  }
-  .container {
-    max-width: 620px;
-    margin: 0 auto;
-    padding: 40px 20px 60px;
-  }
-  .mono { font-family: 'JetBrains Mono', monospace; }
-
-  /* Progress */
-  .progress-wrap { margin-bottom: 32px; }
-  .progress-info { display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px; }
-  .progress-label { color: var(--text-muted); }
-  .progress-pct { color: var(--accent); }
-  .progress-bar { height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
-  .progress-fill { height:100%; background:linear-gradient(90deg,var(--accent),#818cf8); border-radius:2px; transition:width .5s cubic-bezier(.22,1,.36,1); }
-
-  /* Hero */
-  .hero { text-align:center; margin-bottom:40px; }
-  .hero-icon { font-size:40px; margin-bottom:8px; }
-  .hero h1 { color:var(--white); font-size:26px; font-weight:800; line-height:1.3; margin-bottom:8px; }
-  .hero p { color:var(--text-muted); font-size:14px; }
-
-  /* Question */
-  .question-title { color:var(--white); font-size:20px; font-weight:700; margin-bottom:6px; line-height:1.4; }
-  .question-sub { color:var(--text-dim); font-size:13px; margin-bottom:4px; }
-  .multi-badge { color:var(--accent); font-size:12px; font-family:'JetBrains Mono',monospace; }
-  .options { display:flex; flex-direction:column; gap:10px; margin-top:20px; }
-
-  /* Option button */
-  .opt-btn {
-    display:flex; align-items:center; gap:14px; width:100%; padding:16px 20px;
-    background:transparent; border:1.5px solid var(--border); border-radius:12px;
-    color:var(--text); font-size:15px; font-family:'DM Sans',sans-serif;
-    cursor:pointer; text-align:left; transition:all .2s ease; line-height:1.5;
-  }
-  .opt-btn:hover { background:var(--card-hover); border-color:#334155; }
-  .opt-btn.selected { background:var(--accent-glow); border-color:var(--border-active); color:var(--white); }
-  .opt-marker {
-    width:28px; height:28px; min-width:28px; border-radius:50%;
-    border:2px solid var(--text-dim); display:flex; align-items:center; justify-content:center;
-    font-size:12px; font-weight:700; color:var(--text-dim); transition:all .2s;
-    font-family:'JetBrains Mono',monospace;
-  }
-  .opt-btn.selected .opt-marker {
-    border-radius:8px; border-color:var(--accent); background:var(--accent); color:#fff;
-  }
-
-  /* Nav */
-  .nav { display:flex; justify-content:space-between; margin-top:28px; }
-  .btn {
-    padding:10px 22px; border-radius:10px; font-size:14px; font-weight:600;
-    cursor:pointer; transition:all .2s; font-family:'DM Sans',sans-serif;
-  }
-  .btn-back { background:transparent; border:1.5px solid var(--text-dim); color:var(--text-muted); }
-  .btn-back:disabled { border-color:var(--border); color:var(--text-dim); opacity:.4; cursor:default; }
-  .btn-next { background:var(--accent); border:none; color:#fff; padding:10px 28px; }
-  .btn-next:hover { filter:brightness(1.1); }
-  .btn-restart { background:transparent; border:1.5px solid var(--border); color:var(--text-muted); padding:14px 32px; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; }
-
-  /* Results */
-  .result-header { text-align:center; margin-bottom:40px; }
-  .result-header .icon { font-size:48px; margin-bottom:12px; }
-  .result-header h1 { color:var(--white); font-size:28px; font-weight:800; margin-bottom:8px; }
-  .result-verdict { font-size:17px; font-weight:600; line-height:1.5; }
-
-  .cards { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:32px; }
-  .result-card { flex:1; min-width:260px; border-radius:16px; padding:28px; }
-  .result-card.pwc { background:var(--pwc-bg); border:1.5px solid var(--pwc-border); }
-  .result-card.kyp { background:var(--kyp-bg); border:1.5px solid var(--kyp-border); }
-
-  .rc-head { display:flex; align-items:center; gap:10px; margin-bottom:4px; }
-  .rc-head span { font-size:24px; }
-  .rc-head h3 { font-size:18px; font-weight:700; }
-  .rc-sub { color:var(--text-muted); font-size:13px; margin-bottom:20px; line-height:1.5; }
-  .rc-score { display:flex; align-items:baseline; gap:6px; margin-bottom:8px; }
-  .rc-score .num { font-size:40px; font-weight:800; font-family:'JetBrains Mono',monospace; }
-  .rc-score .label { color:var(--text-dim); font-size:13px; }
-  .rc-bar { height:6px; background:rgba(255,255,255,.06); border-radius:3px; overflow:hidden; margin-bottom:20px; }
-  .rc-bar-fill { height:100%; border-radius:3px; transition:width 1s ease; }
-  .rc-features { display:flex; flex-direction:column; gap:8px; }
-  .rc-feat { display:flex; align-items:flex-start; gap:8px; font-size:13px; color:var(--text-muted); line-height:1.5; }
-  .rc-feat .dot { font-size:14px; margin-top:1px; }
-
-  .summary-box { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:24px; margin-bottom:24px; }
-  .summary-title { color:var(--text-muted); font-size:12px; font-weight:700; letter-spacing:1px; margin-bottom:16px; font-family:'JetBrains Mono',monospace; }
-  .summary-item { margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid var(--border); }
-  .summary-item:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
-  .summary-q { color:var(--text-dim); font-size:12px; margin-bottom:4px; }
-  .summary-a { color:var(--text); font-size:14px; }
-
-  /* Neither */
-  .neither-wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; text-align:center; padding:24px; }
-  .neither-icon { font-size:56px; margin-bottom:16px; }
-  .neither-wrap h2 { color:var(--neither); font-size:24px; font-weight:700; margin-bottom:12px; }
-  .neither-wrap p { color:var(--text-muted); font-size:15px; line-height:1.7; margin-bottom:28px; max-width:500px; }
-  .btn-accent { padding:12px 28px; background:var(--accent); color:#fff; border:none; border-radius:10px; font-size:15px; cursor:pointer; font-weight:600; }
-
-  .hidden { display:none; }
-
-  @media(max-width:560px) {
-    .cards { flex-direction:column; }
-    .result-card { min-width:auto; }
-    .hero h1 { font-size:22px; }
-    .result-header h1 { font-size:24px; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:640px;margin:0 auto;padding:48px 20px 80px;}
+  body::before{content:"";position:fixed;inset:0;z-index:-1;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");}
+  .dots{display:flex;gap:6px;justify-content:center;margin-bottom:36px;}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:all .3s;}
+  .dot.done{background:var(--accent);}.dot.active{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);transform:scale(1.15);}
+  .hero{text-align:center;margin-bottom:48px;}
+  .hero-badge{display:inline-block;padding:6px 14px;border:1px solid var(--border);border-radius:100px;font-size:11px;font-weight:600;letter-spacing:1.5px;color:var(--muted);margin-bottom:16px;font-family:'JetBrains Mono',monospace;}
+  .hero h1{font-size:30px;font-weight:800;color:var(--white);line-height:1.25;margin-bottom:10px;}
+  .hero h1 span{background:linear-gradient(135deg,#818cf8,#6366f1,#4f46e5);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .hero p{color:var(--muted);font-size:15px;line-height:1.6;max-width:460px;margin:0 auto;}
+  .q-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px 32px;position:relative;overflow:hidden;}
+  .q-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.4;}
+  .q-num{font-size:11px;font-weight:600;letter-spacing:1.5px;color:var(--dim);font-family:'JetBrains Mono',monospace;margin-bottom:12px;}
+  .q-text{font-size:20px;font-weight:700;color:var(--white);line-height:1.35;margin-bottom:6px;}
+  .q-sub{font-size:13px;color:var(--dim);margin-bottom:20px;line-height:1.5;}
+  .opts{display:flex;flex-direction:column;gap:8px;}
+  .opt{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border:1.5px solid var(--border);border-radius:12px;cursor:pointer;transition:all .15s;background:transparent;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);text-align:left;width:100%;line-height:1.45;}
+  .opt:hover{border-color:var(--border-hi);background:var(--card-hover);}
+  .opt.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--white);}
+  .opt-dot{width:22px;height:22px;min-width:22px;border-radius:50%;border:2px solid var(--faint);display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .15s;font-size:11px;font-weight:700;}
+  .opt.sel .opt-dot{border-color:var(--accent);background:var(--accent);color:#fff;}
+  .opt-label{flex:1;}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;}
+  .btn{padding:11px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;border:none;}
+  .btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--muted);}
+  .btn-ghost:hover{border-color:var(--border-hi);color:var(--text);}
+  .btn-ghost:disabled{opacity:.3;cursor:default;}
+  .btn-primary{background:var(--accent);color:#fff;padding:11px 28px;}
+  .btn-primary:hover{filter:brightness(1.1);}
+  .q-counter{font-size:12px;color:var(--dim);font-family:'JetBrains Mono',monospace;}
+  .result{animation:fadeUp .5s ease;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+  .verdict-card{border-radius:20px;padding:40px 32px;text-align:center;margin-bottom:28px;position:relative;overflow:hidden;}
+  .verdict-card.acc{background:var(--gold-bg);border:1.5px solid var(--gold-border);}
+  .verdict-card.swe{background:var(--green-bg);border:1.5px solid var(--green-border);}
+  .verdict-card.neither{background:#1a0a0a;border:1.5px solid rgba(239,68,68,.25);}
+  .verdict-icon{font-size:52px;margin-bottom:12px;}
+  .verdict-label{font-size:11px;font-weight:700;letter-spacing:1.5px;font-family:'JetBrains Mono',monospace;margin-bottom:8px;}
+  .verdict-title{font-size:26px;font-weight:800;margin-bottom:8px;}
+  .verdict-sub{font-size:15px;line-height:1.6;max-width:500px;margin:0 auto 24px;color:var(--text2);}
+  .verdict-pill{display:inline-block;padding:6px 16px;border-radius:100px;font-size:12px;font-weight:600;}
+  .section-label{color:var(--white);font-size:16px;margin-bottom:12px;font-weight:700;display:flex;align-items:center;gap:8px;}
+  .reasons{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+  .reason{display:flex;gap:12px;padding:16px 18px;background:var(--surface);border:1px solid var(--border);border-radius:14px;align-items:flex-start;}
+  .reason-icon{font-size:18px;margin-top:2px;min-width:24px;text-align:center;}
+  .reason-text{font-size:14px;color:var(--text2);line-height:1.55;}
+  .reason-text strong{color:var(--white);font-weight:600;}
+  .encourage{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:28px;text-align:center;}
+  .encourage-icon{font-size:36px;margin-bottom:10px;}
+  .encourage h3{color:var(--white);font-size:18px;font-weight:700;margin-bottom:8px;}
+  .encourage p{color:var(--muted);font-size:14px;line-height:1.7;max-width:500px;margin:0 auto;}
+  .alt-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:28px;}
+  .alt-card h3{font-size:15px;font-weight:700;margin-bottom:8px;}
+  .alt-card p{font-size:13px;color:var(--muted);line-height:1.6;}
+  .summary{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:28px;}
+  .summary-title{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--dim);font-family:'JetBrains Mono',monospace;margin-bottom:16px;}
+  .s-row{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);align-items:baseline;}
+  .s-row:last-child{border-bottom:none;}
+  .s-q{flex:1;font-size:12px;color:var(--dim);}
+  .s-a{flex:1.5;font-size:13px;color:var(--text2);}
+  .center{text-align:center;}
+  @media(max-width:520px){
+    .wrap{padding:32px 16px 60px;}
+    .q-card{padding:28px 20px;}
+    .hero h1{font-size:24px;}
+    .verdict-title{font-size:22px;}
+    .verdict-card{padding:32px 20px;}
+    .s-row{flex-direction:column;gap:4px;}
   }
 </style>
 </head>
 <body>
-<div class="container" id="app"></div>
-
+<div class="wrap" id="app"></div>
 <script>
-const QUESTIONS = [
+const QS = [
   {
-    id:"role", question:"What best describes your current role?",
-    options:[
-      {text:"Software Engineer (Backend / Fullstack / Platform)",pwc:0,kyp:3},
-      {text:"Test / Automation Engineer",pwc:0,kyp:2},
-      {text:"AI/ML Engineer or Data Scientist",pwc:2,kyp:2},
-      {text:"Cloud / DevOps Engineer",pwc:2,kyp:1},
-      {text:"Technical PM / Solution Architect",pwc:3,kyp:0},
-      {text:"Founder / Entrepreneur building AI products",pwc:3,kyp:0},
-      {text:"Final-year Student / Intern",pwc:3,kyp:1},
-      {text:"Non-technical / No coding background",pwc:0,kyp:0,neither:true},
+    id:"role", q:"What best describes your current role?",
+    sub:"This helps us understand your starting point.",
+    opts:[
+      {t:"Software Engineer (Backend / Fullstack / Platform)", lean:"swe", w:2},
+      {t:"Test / Automation Engineer", lean:"swe", w:1},
+      {t:"AI/ML Engineer or Data Scientist", lean:"swe", w:1},
+      {t:"Cloud / DevOps Engineer", lean:"acc", w:1},
+      {t:"Technical PM / Solution Architect", lean:"acc", w:2},
+      {t:"Founder / Entrepreneur building AI products", lean:"acc", w:2},
+      {t:"Final-year Student / Intern", lean:"acc", w:1},
+      {t:"Non-technical / No coding background at all", lock:"neither"},
     ]
   },
   {
-    id:"experience", question:"How many years of professional experience do you have?",
-    options:[
-      {text:"Student or < 1 year",pwc:3,kyp:1},
-      {text:"1\u20133 years (Early career)",pwc:2,kyp:2},
-      {text:"3\u20137 years (Mid-level)",pwc:1,kyp:3},
-      {text:"8+ years (Senior / Lead)",pwc:1,kyp:3},
+    id:"python", q:"How comfortable are you with Python?",
+    opts:[
+      {t:"Never written Python code", lock:"neither"},
+      {t:"Basic \u2014 simple scripts, know the syntax", lean:"acc", w:2},
+      {t:"Intermediate \u2014 comfortable with APIs, libraries, Pandas", lean:"swe", w:1},
+      {t:"Advanced \u2014 production code, testing, system design", lean:"swe", w:2},
     ]
   },
   {
-    id:"python", question:"How comfortable are you with Python programming?",
-    options:[
-      {text:"Never written Python code",pwc:0,kyp:0,neither:true},
-      {text:"Basic \u2014 can write simple scripts, know syntax",pwc:3,kyp:1},
-      {text:"Intermediate \u2014 comfortable with APIs, libraries, data handling",pwc:2,kyp:3},
-      {text:"Advanced \u2014 production code, system design, testing",pwc:1,kyp:3},
+    id:"ai_familiarity", q:"How familiar are you with Agentic AI concepts?",
+    sub:"Think: LLMs, AI agents, RAG, multi-agent systems, prompt engineering.",
+    opts:[
+      {t:"Completely new \u2014 I\u2019ve heard of AI but don\u2019t know these terms", lock:"swe"},
+      {t:"Aware \u2014 I\u2019ve read about LLMs and agents but never built anything", lean:"swe", w:1},
+      {t:"Basic understanding \u2014 I know what LLMs, agents, and RAG are and have tried simple prompts or tools", lock:"acc"},
+      {t:"Solid grasp \u2014 I understand agent workflows, tool calling, embeddings, and orchestration concepts", lean:"acc", w:2},
     ]
   },
   {
-    id:"swe", question:"How strong are your software engineering fundamentals?",
-    subtitle:"(System design, APIs, async workflows, deployment, testing)",
-    options:[
-      {text:"Minimal \u2014 I mostly do scripting or simple tasks",pwc:3,kyp:0},
-      {text:"Moderate \u2014 I understand APIs and basic architecture",pwc:2,kyp:2},
-      {text:"Strong \u2014 I design and build production systems",pwc:1,kyp:3},
-      {text:"Expert \u2014 I lead architecture and system design reviews",pwc:0,kyp:3},
+    id:"goal", q:"What is the #1 thing you want from this course?",
+    sub:"Pick the ONE that matters most.",
+    opts:[
+      {t:"Get an industry-recognized certification from a Big 4 consulting firm", lock:"acc"},
+      {t:"Prepare for Agentic AI and AI system design interviews", lock:"swe"},
+      {t:"Build domain-specific AI projects in Healthcare, BFSI, E-Commerce, or Supply Chain", lock:"acc"},
+      {t:"Go deep on multi-agent orchestration, fine-tuning, and production operations", lock:"swe"},
+      {t:"Quickly learn AI and start applying it at my current job", lean:"acc", w:2},
+      {t:"Transition into an AI Engineering role at a top company", lean:"swe", w:2},
+      {t:"Understand AI capabilities for product or leadership decisions", lean:"acc", w:2},
     ]
   },
   {
-    id:"goal", question:"What is your PRIMARY goal?",
-    options:[
-      {text:"Build a portfolio of AI projects quickly",pwc:3,kyp:1},
-      {text:"Prepare for Agentic AI / AI Engineer interviews",pwc:0,kyp:3},
-      {text:"Go deep on production-grade agentic system design",pwc:0,kyp:3},
-      {text:"Learn AI fast and apply at my current job",pwc:3,kyp:1},
-      {text:"Transition into an AI engineering role",pwc:1,kyp:3},
-      {text:"Understand AI capabilities for product / leadership decisions",pwc:3,kyp:0},
+    id:"depth", q:"What kind of learning depth do you need?",
+    opts:[
+      {t:"Broad overview with quick, practical outcomes", lean:"acc", w:2},
+      {t:"Deep, progressive mastery \u2014 I want to become an advanced AI engineer", lock:"swe"},
+      {t:"Somewhere in between \u2014 I\u2019m flexible", lean:"acc", w:0},
     ]
   },
   {
-    id:"depth", question:"What kind of learning experience do you prefer?",
-    options:[
-      {text:"Shorter, focused bootcamp (12 weeks) with quick outcomes",pwc:3,kyp:0},
-      {text:"Longer, progressive program (17 weeks) with deeper mastery",pwc:0,kyp:3},
-      {text:"No strong preference on duration",pwc:1,kyp:1},
+    id:"projects", q:"What kind of project experience matters to you?",
+    opts:[
+      {t:"One deep capstone project with close mentoring and hand-holding from experts", lock:"acc"},
+      {t:"Multiple progressive guided projects building toward a real enterprise system", lock:"swe"},
+      {t:"Flexibility to bring my own project idea and get guidance on it", lock:"swe"},
+      {t:"Domain-specific projects evaluated by industry experts from consulting firms", lock:"acc"},
     ]
   },
   {
-    id:"topics", question:"Which topics matter MOST to you?", subtitle:"Select all that apply", multi:true,
-    options:[
-      {text:"RAG (Retrieval-Augmented Generation)",pwc:2,kyp:2},
-      {text:"Multi-agent orchestration patterns",pwc:1,kyp:3},
-      {text:"MCP / Agent communication protocols",pwc:2,kyp:3},
-      {text:"Fine-tuning (LoRA, PEFT, domain adaptation)",pwc:0,kyp:3},
-      {text:"Evaluation, safety & guardrails",pwc:1,kyp:3},
-      {text:"Cost optimization & production ops",pwc:0,kyp:3},
-      {text:"AWS deployment basics",pwc:2,kyp:2},
-      {text:"Interview preparation for AI roles",pwc:0,kyp:3},
+    id:"interview", q:"Is interview preparation for AI roles important to you?",
+    opts:[
+      {t:"Yes \u2014 I need case-style questions, design critiques, and mock scenarios", lock:"swe"},
+      {t:"Nice to have, but not my main priority", lean:"acc", w:1},
+      {t:"No \u2014 I\u2019m not looking to switch jobs right now", lean:"acc", w:1},
     ]
   },
   {
-    id:"cert", question:"How important is a PwC co-branded certification to you?",
-    options:[
-      {text:"Very important \u2014 it adds credibility for my career",pwc:3,kyp:0},
-      {text:"Nice to have, but not a deciding factor",pwc:1,kyp:1},
-      {text:"Doesn\u2019t matter to me",pwc:0,kyp:1},
-    ]
-  },
-  {
-    id:"project", question:"What type of project experience do you want?",
-    options:[
-      {text:"1 deep domain-specific capstone with industry mentoring",pwc:3,kyp:0},
-      {text:"9+ progressive guided projects building toward an enterprise system",pwc:0,kyp:3},
-      {text:"Flexibility to bring my own project idea (BYOP)",pwc:0,kyp:3},
-      {text:"Domain-specific projects (Healthcare, BFSI, E-Commerce, Supply Chain)",pwc:3,kyp:1},
-    ]
-  },
-  {
-    id:"time", question:"How many hours per week can you realistically commit?",
-    options:[
-      {text:"4\u20136 hours/week",pwc:3,kyp:0},
-      {text:"6\u201310 hours/week",pwc:2,kyp:2},
-      {text:"10\u201314 hours/week",pwc:1,kyp:3},
-      {text:"14+ hours/week",pwc:0,kyp:3},
+    id:"support", q:"What kind of support matters most to you?",
+    opts:[
+      {t:"1:1 expert mentoring and close hand-holding on my capstone project", lock:"acc"},
+      {t:"Weekly guided live project builds with the instructor and peer feedback", lock:"swe"},
+      {t:"Coaching sessions for doubt clearing and extra hands-on help", lean:"acc", w:1},
+      {t:"Structured feedback on architecture, correctness, and production readiness", lean:"swe", w:2},
     ]
   },
 ];
 
-let state = { currentQ:0, answers:{}, multiSel:{}, neitherFlag:false, showResult:false };
+let S = {qi:0, ans:{}, done:false};
+function reset(){ S={qi:0,ans:{},done:false}; render(); window.scrollTo(0,0); }
 
-function setState(patch) {
-  Object.assign(state, patch);
-  render();
-}
+function decide(){
+  let locks = {acc:[], swe:[], neither:[]};
+  let accLean=0, sweLean=0, leans=[];
 
-function selectOption(qId, idx, opt) {
-  const q = QUESTIONS[state.currentQ];
-  if (opt.neither) state.neitherFlag = true;
-  if (q.multi) {
-    const curr = state.multiSel[qId] || [];
-    state.multiSel[qId] = curr.includes(idx) ? curr.filter(i=>i!==idx) : [...curr, idx];
-    render();
-  } else {
-    state.answers[qId] = idx;
-    render();
-    setTimeout(advance, 350);
-  }
-}
-
-function advance() {
-  if (state.currentQ < QUESTIONS.length - 1) setState({currentQ: state.currentQ+1});
-  else setState({showResult:true});
-}
-
-function goBack() {
-  if (state.currentQ > 0) setState({currentQ: state.currentQ-1});
-}
-
-function restart() {
-  setState({currentQ:0, answers:{}, multiSel:{}, neitherFlag:false, showResult:false});
-}
-
-function calcScores() {
-  let pwc=0, kyp=0;
-  QUESTIONS.forEach(q => {
-    if (q.multi) {
-      (state.multiSel[q.id]||[]).forEach(i => { pwc+=q.options[i].pwc; kyp+=q.options[i].kyp; });
-    } else if (state.answers[q.id] !== undefined) {
-      pwc += q.options[state.answers[q.id]].pwc;
-      kyp += q.options[state.answers[q.id]].kyp;
+  QS.forEach(q => {
+    const i = S.ans[q.id];
+    if(i!==undefined){
+      const o = q.opts[i];
+      if(o.lock) locks[o.lock].push({q:q.q, a:o.t});
+      if(o.lean){ const w=o.w||1; if(o.lean==="acc") accLean+=w; else sweLean+=w; leans.push({q:q.q,a:o.t,lean:o.lean}); }
     }
   });
-  return {pwc, kyp};
+
+  if(locks.neither.length>0) return {course:"neither",reasons:locks.neither,locks,leans};
+
+  const aL=locks.acc.length, sL=locks.swe.length;
+
+  if(aL>0 && sL===0) return {course:"acc",reasons:locks.acc,locks,leans,conf:"high"};
+  if(sL>0 && aL===0) return {course:"swe",reasons:locks.swe,locks,leans,conf:"high"};
+
+  if(aL>0 && sL>0){
+    if(aL>sL) return {course:"acc",reasons:locks.acc,locks,leans,conf:"high"};
+    if(sL>aL) return {course:"swe",reasons:locks.swe,locks,leans,conf:"high"};
+    const c = accLean>=sweLean ? "acc" : "swe";
+    return {course:c,reasons:locks[c],locks,leans,conf:"mixed"};
+  }
+
+  if(accLean===sweLean) return {course:"acc",reasons:[],locks,leans,conf:"low"};
+  const c = accLean>sweLean ? "acc" : "swe";
+  return {course:c,reasons:[],locks,leans,conf:"medium"};
 }
 
-function calcMax() {
-  let pwcMax=0, kypMax=0;
-  QUESTIONS.forEach(q => {
-    if (q.multi) { q.options.forEach(o => { pwcMax+=o.pwc; kypMax+=o.kyp; }); }
-    else { pwcMax+=Math.max(...q.options.map(o=>o.pwc)); kypMax+=Math.max(...q.options.map(o=>o.kyp)); }
-  });
-  return {pwcMax, kypMax};
+function sel(qId, idx){ S.ans[qId]=idx; render(); setTimeout(next,300); }
+function next(){ if(S.qi<QS.length-1){S.qi++;} else {S.done=true;} render(); window.scrollTo(0,0); }
+function back(){ if(S.qi>0){S.qi--;render();} }
+
+const CD = {
+  acc:{
+    icon:"\u26A1", name:"AI Accelerator with PwC", partner:"Interview Kickstart + PwC", dur:"12 weeks",
+    color:"var(--gold)", cls:"acc",
+    tagline:"Fast-track your AI journey with industry-backed projects and a PwC co-branded certification.",
+    hl:[
+      ["\uD83C\uDFAF","<strong>12-week intensive bootcamp</strong> \u2014 gain job-ready agentic AI skills in just 3 months"],
+      ["\uD83C\uDFC6","<strong>PwC co-branded certification</strong> \u2014 an industry-recognized credential that strengthens your profile"],
+      ["\uD83C\uDFE5","<strong>4 domain-specific capstone projects</strong> \u2014 Healthcare, BFSI, E-Commerce, and Supply Chain"],
+      ["\uD83E\uDD1D","<strong>3\u00D7 1:1 expert mentoring sessions</strong> \u2014 personalized guidance as you build your capstone"],
+      ["\uD83D\uDCBB","<strong>Weekly coaching sessions</strong> \u2014 Saturday doubt-clearing and hands-on support"],
+      ["\u2601\uFE0F","<strong>End-to-end AWS deployment</strong> \u2014 deploy a working AI application by Week 4"],
+    ],
+    encourage_title:"You\u2019re on the fast track to becoming AI-powered!",
+    encourage_text:"This program is designed to get you building and deploying real agentic AI applications in just 12 weeks. With PwC\u2019s industry expertise backing your projects and a co-branded certification on your resume, you\u2019ll walk away with both the skills and the credibility to make an immediate impact \u2014 whether that\u2019s at your current role, in interviews, or on your own venture. The hands-on mentoring ensures you\u2019re never stuck, and the domain-specific projects give you a portfolio that speaks directly to industry needs."
+  },
+  swe:{
+    icon:"\uD83D\uDD2C", name:"Applied Agentic AI for SWEs", partner:"Interview Kickstart \u00B7 KYP 2026", dur:"17 weeks",
+    color:"var(--green)", cls:"swe",
+    tagline:"Master production-grade agentic systems, multi-agent architectures, and ace AI system design interviews.",
+    hl:[
+      ["\uD83D\uDEE0\uFE0F","<strong>17-week deep program</strong> \u2014 a progressive journey from agent foundations to enterprise-grade systems"],
+      ["\uD83E\uDDE9","<strong>9 guided live projects</strong> \u2014 build alongside the instructor every week, culminating in a real-world system"],
+      ["\uD83C\uDFAF","<strong>6-week interview prep</strong> \u2014 case-style questions, design critiques, and failure analysis for top companies"],
+      ["\uD83E\uDDEC","<strong>Fine-tuning module</strong> \u2014 LoRA, PEFT, domain adaptation with hands-on cost\u2013benefit analysis"],
+      ["\uD83D\uDD12","<strong>Safety, evaluation & production ops</strong> \u2014 guardrails, prompt injection defense, cost monitoring"],
+      ["\uD83D\uDCC1","<strong>11+ capstone options + BYOP</strong> \u2014 choose a pre-built challenge or bring your own project idea"],
+    ],
+    encourage_title:"You\u2019re set to become a top-tier AI engineer!",
+    encourage_text:"This program is built for engineers who want to go beyond surface-level AI demos and truly master the craft of building, evaluating, and operating production-grade agentic systems. Over 17 weeks, you\u2019ll build 9 real projects with your instructor, develop the engineering judgment that top companies look for, and go through a rigorous interview prep curriculum designed to help you land AI engineering roles. Whether you\u2019re aiming for a promotion, a career pivot, or building the next generation of AI systems \u2014 this course gives you the depth, the portfolio, and the confidence to get there."
+  }
+};
+
+function render(){
+  const el = document.getElementById("app");
+  if(S.done){ el.innerHTML = renderResult(); return; }
+  const q = QS[S.qi];
+  const total = QS.length;
+  const dots = QS.map((_,i)=>`<div class="dot${i<S.qi?" done":""}${i===S.qi?" active":""}"></div>`).join("");
+  const hero = S.qi===0 ? `<div class="hero"><div class="hero-badge">${total} QUESTIONS \u00B7 1 MINUTE</div><h1>Find Your <span>Right Course</span></h1><p>Tell us about your goals and background, and we\u2019ll recommend the Agentic AI program that\u2019s the best fit for you.</p></div>` : "";
+  const opts = q.opts.map((o,i)=>{
+    const isSel = S.ans[q.id]===i;
+    return `<button class="${isSel?"opt sel":"opt"}" onclick="sel('${q.id}',${i})"><span class="opt-dot">${isSel?"\u2713":""}</span><span class="opt-label">${o.t}</span></button>`;
+  }).join("");
+  el.innerHTML = `${hero}<div class="dots">${dots}</div><div class="q-card"><div class="q-num">QUESTION ${S.qi+1} OF ${total}</div><div class="q-text">${q.q}</div>${q.sub?`<div class="q-sub">${q.sub}</div>`:""}<div class="opts">${opts}</div></div><div class="nav"><button class="btn btn-ghost" ${S.qi===0?"disabled":""} onclick="back()">\u2190 Back</button><span class="q-counter">${S.qi+1} / ${total}</span><span></span></div>`;
 }
 
-function letter(i) { return String.fromCharCode(65+i); }
+function renderResult(){
+  const d = decide();
 
-function renderNeither() {
-  return `
-    <div class="neither-wrap">
-      <div>
-        <div class="neither-icon">\u26A0\uFE0F</div>
-        <h2>Neither Course Is Suitable Right Now</h2>
-        <p>Based on your responses, both courses require programming fundamentals that may not match your current skill level. We recommend building foundational Python and software engineering skills first before enrolling.</p>
-        <button class="btn-accent" onclick="restart()">Retake Assessment</button>
+  if(d.course==="neither"){
+    return `<div class="result">
+      <div class="verdict-card neither">
+        <div class="verdict-icon">\u26A0\uFE0F</div>
+        <div class="verdict-label" style="color:var(--red)">HOLD ON \u2014 LET\u2019S GET YOU READY FIRST</div>
+        <div class="verdict-title" style="color:var(--red)">Build Your Foundations First</div>
+        <div class="verdict-sub">Both of our Agentic AI programs require at least basic Python programming skills. We\u2019d love to have you \u2014 but we want to set you up for success. We recommend building your coding fundamentals first, and then enrolling when you\u2019re ready to hit the ground running.</div>
       </div>
+      <div class="reasons">${d.reasons.map(r=>`<div class="reason"><span class="reason-icon">\uD83D\uDEAB</span><span class="reason-text"><strong>${r.q}</strong><br>You selected: \u201C${r.a}\u201D</span></div>`).join("")}</div>
+      <div class="center"><button class="btn btn-primary" onclick="reset()">\u21BB Retake Assessment</button></div>
     </div>`;
-}
+  }
 
-function renderResult() {
-  const {pwc, kyp} = calcScores();
-  const {pwcMax, kypMax} = calcMax();
-  const pwcPct = Math.round((pwc/pwcMax)*100);
-  const kypPct = Math.round((kyp/kypMax)*100);
-  const diff = Math.abs(pwcPct - kypPct);
-  const winner = pwcPct > kypPct ? "pwc" : kypPct > pwcPct ? "kyp" : "tie";
-  let verdict, vColor;
-  if (diff <= 10) { verdict = "Both courses are a good fit! Consider your priorities below to decide."; vColor = "var(--accent)"; }
-  else if (winner === "pwc") { verdict = "\u26A1 Agentic AI Edge (IK + PwC) is the stronger fit for you."; vColor = "var(--pwc)"; }
-  else { verdict = "\uD83D\uDD2C Applied Agentic AI for SWEs (KYP) is the stronger fit for you."; vColor = "var(--kyp)"; }
+  const c = CD[d.course];
+  const other = CD[d.course==="acc"?"swe":"acc"];
 
-  const pwcFeats = [
-    "Faster 12-week bootcamp format",
-    "PwC co-branded certification",
-    "Domain capstones: Healthcare, BFSI, E-Commerce, Supply Chain",
-    "Broader audience: PMs, founders, cloud engineers welcome",
-    "3\u00D7 1:1 expert mentoring sessions",
-  ];
-  const kypFeats = [
-    "Deep 17-week engineering-focused program",
-    "9 guided live projects + enterprise capstone",
-    "6-week interview prep (case questions, design critiques)",
-    "Fine-tuning, multi-agent protocols (MCP/A2A/ACP)",
-    "BYOP option + 11 capstone choices",
-  ];
+  let confLabel="", confStyle="";
+  if(d.conf==="high"){ confLabel="WE HAVE A CLEAR MATCH FOR YOU"; confStyle=`color:${c.color}`; }
+  else if(d.conf==="mixed"){ confLabel="BASED ON YOUR TOP PRIORITIES, HERE\u2019S YOUR BEST FIT"; confStyle=`color:${c.color}`; }
+  else if(d.conf==="medium"){ confLabel="HERE\u2019S WHAT WE\u2019D RECOMMEND FOR YOU"; confStyle=`color:${c.color}`; }
+  else { confLabel="HERE\u2019S A GREAT STARTING POINT FOR YOU"; confStyle="color:var(--muted)"; }
 
-  let summary = "";
-  QUESTIONS.forEach(q => {
-    const isMulti = q.multi;
-    const selected = isMulti ? (state.multiSel[q.id]||[]) : (state.answers[q.id]!==undefined ? [state.answers[q.id]] : []);
-    const texts = selected.map(i => q.options[i].text);
-    const aText = texts.length ? texts.join(", ") : '<span style="color:var(--text-dim)">Not answered</span>';
-    summary += `<div class="summary-item"><div class="summary-q">${q.question}</div><div class="summary-a">${aText}</div></div>`;
-  });
+  let whyHTML = "";
+  if(d.reasons.length > 0){
+    whyHTML += d.reasons.map(r => `<div class="reason">
+      <span class="reason-icon">\u2705</span>
+      <span class="reason-text"><strong>You said:</strong> \u201C${r.a}\u201D<br>This is exactly what <strong>${c.name}</strong> is designed for.</span>
+    </div>`).join("");
+  }
+  const topLeans = d.leans.filter(l => l.lean === d.course).slice(0, 4);
+  whyHTML += topLeans.map(l => `<div class="reason">
+    <span class="reason-icon">\u2192</span>
+    <span class="reason-text"><strong>${l.q}</strong><br>Your answer \u201C${l.a}\u201D aligns perfectly with this program.</span>
+  </div>`).join("");
 
-  return `
-    <div class="result-header">
-      <div class="icon">\uD83C\uDFAF</div>
-      <h1>Your Recommendation</h1>
-      <p class="result-verdict" style="color:${vColor}">${verdict}</p>
-    </div>
-    <div class="cards">
-      <div class="result-card pwc">
-        <div class="rc-head"><span>\u26A1</span><h3 style="color:var(--pwc)">Agentic AI Edge</h3></div>
-        <p class="rc-sub">IK + PwC \u00B7 12 weeks</p>
-        <div class="rc-score"><span class="num mono" style="color:var(--pwc)">${pwcPct}%</span><span class="label">match</span></div>
-        <div class="rc-bar"><div class="rc-bar-fill" style="width:${pwcPct}%;background:var(--pwc)"></div></div>
-        <div class="rc-features">${pwcFeats.map(f=>`<div class="rc-feat"><span class="dot" style="color:var(--pwc)">\u25CF</span>${f}</div>`).join("")}</div>
-      </div>
-      <div class="result-card kyp">
-        <div class="rc-head"><span>\uD83D\uDD2C</span><h3 style="color:var(--kyp)">Applied Agentic AI for SWEs</h3></div>
-        <p class="rc-sub">KYP \u00B7 17 weeks</p>
-        <div class="rc-score"><span class="num mono" style="color:var(--kyp)">${kypPct}%</span><span class="label">match</span></div>
-        <div class="rc-bar"><div class="rc-bar-fill" style="width:${kypPct}%;background:var(--kyp)"></div></div>
-        <div class="rc-features">${kypFeats.map(f=>`<div class="rc-feat"><span class="dot" style="color:var(--kyp)">\u25CF</span>${f}</div>`).join("")}</div>
-      </div>
-    </div>
-    <div class="summary-box">
-      <div class="summary-title mono">YOUR RESPONSE SUMMARY</div>
-      ${summary}
-    </div>
-    <div style="text-align:center">
-      <button class="btn-restart" onclick="restart()">\u21BB Retake Assessment</button>
-    </div>`;
-}
-
-function renderQuestion() {
-  const q = QUESTIONS[state.currentQ];
-  const pct = Math.round((state.currentQ / QUESTIONS.length) * 100);
-
-  const hero = state.currentQ === 0 ? `
-    <div class="hero">
-      <div class="hero-icon">\uD83E\uDDED</div>
-      <h1>Which Agentic AI Course Is Right for You?</h1>
-      <p>Answer 10 quick questions. We\u2019ll match you to the best-fit program.</p>
-    </div>` : "";
-
-  let opts = q.options.map((opt, i) => {
-    const isMulti = q.multi;
-    const selected = isMulti
-      ? (state.multiSel[q.id]||[]).includes(i)
-      : state.answers[q.id] === i;
-    const cls = selected ? "opt-btn selected" : "opt-btn";
-    const marker = selected ? "\u2713" : letter(i);
-    return `<button class="${cls}" onclick='selectOption("${q.id}",${i},${JSON.stringify(opt)})'>
-      <span class="opt-marker">${marker}</span>${opt.text}
-    </button>`;
+  let summaryHTML = QS.map(q => {
+    const i = S.ans[q.id];
+    const aText = i!==undefined ? q.opts[i].t : "<em style='color:var(--dim)'>Not answered</em>";
+    return `<div class="s-row"><span class="s-q">${q.q}</span><span class="s-a">${aText}</span></div>`;
   }).join("");
 
-  const multiBtn = q.multi ? `<button class="btn btn-next" onclick="advance()">Continue \u2192</button>` : "";
-
-  return `
-    ${hero}
-    <div class="progress-wrap">
-      <div class="progress-info">
-        <span class="progress-label mono">QUESTION ${state.currentQ+1} OF ${QUESTIONS.length}</span>
-        <span class="progress-pct mono">${pct}%</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+  return `<div class="result">
+    <div class="verdict-card ${c.cls}">
+      <div class="verdict-icon">${c.icon}</div>
+      <div class="verdict-label" style="${confStyle}">${confLabel}</div>
+      <div class="verdict-title" style="color:${c.color}">${c.name}</div>
+      <div class="verdict-sub">${c.tagline}</div>
+      <div class="verdict-pill" style="border:1px solid ${c.color};color:${c.color}">${c.partner} \u00B7 ${c.dur}</div>
     </div>
-    <h2 class="question-title">${q.question}</h2>
-    ${q.subtitle ? `<p class="question-sub">${q.subtitle}</p>` : ""}
-    ${q.multi ? `<p class="multi-badge mono">SELECT MULTIPLE</p>` : ""}
-    <div class="options">${opts}</div>
-    <div class="nav">
-      <button class="btn btn-back" ${state.currentQ===0?"disabled":""} onclick="goBack()">\u2190 Back</button>
-      ${multiBtn}
-    </div>`;
-}
 
-function render() {
-  const app = document.getElementById("app");
-  if (state.showResult && state.neitherFlag) { app.innerHTML = renderNeither(); }
-  else if (state.showResult) { app.innerHTML = renderResult(); }
-  else { app.innerHTML = renderQuestion(); }
+    <div class="section-label">\uD83D\uDCCD Why this course matches your goals</div>
+    <div class="reasons">${whyHTML}</div>
+
+    <div class="section-label">\u2728 Here\u2019s what you\u2019ll get</div>
+    <div class="reasons" style="margin-bottom:28px;">
+      ${c.hl.map(([icon, text]) => `<div class="reason"><span class="reason-icon">${icon}</span><span class="reason-text">${text}</span></div>`).join("")}
+    </div>
+
+    <div class="encourage">
+      <div class="encourage-icon">\uD83D\uDE80</div>
+      <h3 style="color:${c.color}">${c.encourage_title}</h3>
+      <p>${c.encourage_text}</p>
+    </div>
+
+    <div class="alt-card">
+      <h3 style="color:var(--dim)">Also from Interview Kickstart: ${other.name}</h3>
+      <p>${other.tagline}<br><br><strong>${other.partner} \u00B7 ${other.dur}</strong> \u2014 This is a great program too, but based on your answers, the one above is a better match for where you are right now.</p>
+    </div>
+
+    <div class="summary"><div class="summary-title">YOUR RESPONSES</div>${summaryHTML}</div>
+
+    <div class="center">
+      <button class="btn btn-ghost" onclick="reset()" style="margin-right:12px">\u21BB Retake</button>
+    </div>
+  </div>`;
 }
 
 render();
